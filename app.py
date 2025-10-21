@@ -1,12 +1,17 @@
 import pickle
 import streamlit as st
-pickle_in = open('rfmodel.pkl', 'rb')
-clf = pickle.load(pickle_in)
 
-@st.cache()
+# It is better practice to load the model once using st.cache_resource
+@st.cache_resource
+def load_model():
+    with open('rfmodel.pkl', 'rb') as pickle_in:
+        clf = pickle.load(pickle_in)
+    return clf
 
+clf = load_model()
 
-def make_prediction(Age,EstSalary,Gender):
+@st.cache_data
+def make_prediction(Age, EstSalary, Gender):
   if Gender == "Male":
     GenderM = 1
     GenderF = 0
